@@ -32,8 +32,14 @@
 
   function init() {
     showLoading(true);
-    fetch('events.json')
-      .then(function (r) { return r.json(); })
+    // Handle relative path for GitHub Pages deployment at /activity-finder/
+    var basePath = window.location.pathname.includes('/activity-finder/') ? '/activity-finder/' : '';
+    var jsonPath = basePath ? basePath + 'events.json' : 'events.json';
+    fetch(jsonPath)
+      .then(function (r) {
+        if (!r.ok) throw new Error('Failed to fetch events');
+        return r.json();
+      })
       .then(function (data) {
         allEvents = data.events || [];
 
@@ -268,7 +274,7 @@
       addressHtml = '<p class="venue-address">' + esc(a.address) + '</p>';
     }
 
-    return '<div class="activity-card">' +
+    return '<div class="activity-card" role="listitem">' +
       '<div class="activity-header">' +
         '<h3 class="activity-name"><a href="' + esc(a.url) + '" target="_blank" rel="noopener noreferrer">' + esc(a.name) + '</a></h3>' +
         '<div class="badge-group">' +
@@ -278,15 +284,15 @@
       '</div>' +
       '<div class="activity-details">' +
         '<div class="detail-row">' +
-          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C5.243 0 3 2.243 3 5c0 3.188 5 11 5 11s5-7.812 5-11c0-2.757-2.243-5-5-5zm0 7.5c-1.381 0-2.5-1.119-2.5-2.5S6.619 2.5 8 2.5s2.5 1.119 2.5 2.5S9.381 7.5 8 7.5z" fill="currentColor"/></svg>' +
+          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 0C5.243 0 3 2.243 3 5c0 3.188 5 11 5 11s5-7.812 5-11c0-2.757-2.243-5-5-5zm0 7.5c-1.381 0-2.5-1.119-2.5-2.5S6.619 2.5 8 2.5s2.5 1.119 2.5 2.5S9.381 7.5 8 7.5z" fill="currentColor"/></svg>' +
           '<div><p class="venue-name">' + esc(a.venue_name) + '</p>' + addressHtml + '</div>' +
         '</div>' +
         '<div class="detail-row">' +
-          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z" fill="currentColor"/><path d="M8 4v4.5l3.5 2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
+          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 0C3.589 0 0 3.589 0 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z" fill="currentColor"/><path d="M8 4v4.5l3.5 2.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>' +
           '<p class="activity-time">' + esc(displayTime) + '</p>' +
         '</div>' +
         '<div class="detail-row">' +
-          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+          '<svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 4v4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
           priceHtml +
         '</div>' +
       '</div>' +
@@ -312,7 +318,8 @@
     for (var i = 0; i < dates.length; i++) {
       var d = dates[i];
       var cls = d.value === state.activeDate ? 'date-btn active' : 'date-btn';
-      html += '<button class="' + cls + '" data-date="' + d.value + '" onclick="setActiveDate(this)">' + esc(d.label) + '</button>';
+      var ariaPressed = d.value === state.activeDate ? 'true' : 'false';
+      html += '<button class="' + cls + '" aria-pressed="' + ariaPressed + '" data-date="' + d.value + '" onclick="setActiveDate(this)">' + esc(d.label) + '</button>';
     }
     container.innerHTML = html;
   }
@@ -321,24 +328,36 @@
 
   window.setActiveTab = function (btn) {
     var tabs = document.querySelectorAll('.tab');
-    for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].classList.remove('active');
+      tabs[i].setAttribute('aria-selected', 'false');
+    }
     btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
     state.timePeriod = btn.getAttribute('data-time-period') || '';
     applyFilters();
   };
 
   window.setActiveCategory = function (btn) {
     var pills = document.querySelectorAll('.category-pill');
-    for (var i = 0; i < pills.length; i++) pills[i].classList.remove('active');
+    for (var i = 0; i < pills.length; i++) {
+      pills[i].classList.remove('active');
+      pills[i].setAttribute('aria-pressed', 'false');
+    }
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     state.category = btn.getAttribute('data-category') || '';
     applyFilters();
   };
 
   window.setActiveDate = function (btn) {
     var btns = document.querySelectorAll('.date-btn');
-    for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].classList.remove('active');
+      btns[i].setAttribute('aria-pressed', 'false');
+    }
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     state.activeDate = btn.getAttribute('data-date') || '';
     applyFilters();
   };

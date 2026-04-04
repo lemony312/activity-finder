@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Activity Finder</title>
+  <meta name="description" content="Find activities and events near you in Manchester">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Activity Finder - Manchester Events</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,9 +22,9 @@
     <div class="container">
       <div class="activities-layout">
         <!-- Date Sidebar (desktop) / Date Strip (mobile) -->
-        <aside class="date-sidebar">
+        <aside class="date-sidebar" role="navigation" aria-label="Filter by date">
           <h2 class="date-sidebar-title">Date</h2>
-          <div class="date-list" id="date-list">
+          <div class="date-list" id="date-list" role="group">
             <!-- JS-generated date buttons -->
           </div>
         </aside>
@@ -28,28 +32,28 @@
         <!-- Main Content -->
         <div class="activities-page">
           <!-- Tab Bar -->
-          <div class="tab-bar" role="tablist">
-            <button class="tab active" role="tab" data-time-period="" onclick="setActiveTab(this)">All</button>
-            <button class="tab" role="tab" data-time-period="morning" onclick="setActiveTab(this)">Morning</button>
-            <button class="tab" role="tab" data-time-period="afternoon" onclick="setActiveTab(this)">Afternoon</button>
-            <button class="tab" role="tab" data-time-period="evening" onclick="setActiveTab(this)">Evening</button>
-            <button class="tab" role="tab" data-time-period="night" onclick="setActiveTab(this)">Night</button>
+          <div class="tab-bar" role="tablist" aria-label="Filter by time of day">
+            <button class="tab active" role="tab" aria-selected="true" data-time-period="" onclick="setActiveTab(this)">All</button>
+            <button class="tab" role="tab" aria-selected="false" data-time-period="morning" onclick="setActiveTab(this)">Morning</button>
+            <button class="tab" role="tab" aria-selected="false" data-time-period="afternoon" onclick="setActiveTab(this)">Afternoon</button>
+            <button class="tab" role="tab" aria-selected="false" data-time-period="evening" onclick="setActiveTab(this)">Evening</button>
+            <button class="tab" role="tab" aria-selected="false" data-time-period="night" onclick="setActiveTab(this)">Night</button>
           </div>
 
           <!-- Category Filter -->
-          <div class="category-filter" id="category-filter">
-            <button class="category-pill active" data-category="" onclick="setActiveCategory(this)">All Categories</button>
-            <button class="category-pill" data-category="music" onclick="setActiveCategory(this)">&#127925; Music &amp; Live</button>
-            <button class="category-pill" data-category="food-drink" onclick="setActiveCategory(this)">&#127869;&#65039; Food &amp; Drink</button>
-            <button class="category-pill" data-category="networking" onclick="setActiveCategory(this)">&#128188; Networking</button>
-            <button class="category-pill" data-category="arts-culture" onclick="setActiveCategory(this)">&#127912; Arts &amp; Culture</button>
-            <button class="category-pill" data-category="social" onclick="setActiveCategory(this)">&#128101; Social &amp; Dating</button>
-            <button class="category-pill" data-category="learning" onclick="setActiveCategory(this)">&#128218; Learning</button>
-            <button class="category-pill" data-category="sports" onclick="setActiveCategory(this)">&#9917; Sports &amp; Outdoor</button>
-            <button class="category-pill" data-category="faith" onclick="setActiveCategory(this)">&#128591; Faith &amp; Spirituality</button>
-            <button class="category-pill" data-category="nightlife" onclick="setActiveCategory(this)">&#127881; Parties &amp; Nightlife</button>
-            <button class="category-pill" data-category="wellness" onclick="setActiveCategory(this)">&#127973; Wellness</button>
-            <button class="category-pill" data-category="other" onclick="setActiveCategory(this)">&#128204; Other</button>
+          <div class="category-filter" id="category-filter" role="group" aria-label="Filter by category">
+            <button class="category-pill active" aria-pressed="true" data-category="" onclick="setActiveCategory(this)">All Categories</button>
+            <button class="category-pill" aria-pressed="false" data-category="music" onclick="setActiveCategory(this)">&#127925; Music &amp; Live</button>
+            <button class="category-pill" aria-pressed="false" data-category="food-drink" onclick="setActiveCategory(this)">&#127869;&#65039; Food &amp; Drink</button>
+            <button class="category-pill" aria-pressed="false" data-category="networking" onclick="setActiveCategory(this)">&#128188; Networking</button>
+            <button class="category-pill" aria-pressed="false" data-category="arts-culture" onclick="setActiveCategory(this)">&#127912; Arts &amp; Culture</button>
+            <button class="category-pill" aria-pressed="false" data-category="social" onclick="setActiveCategory(this)">&#128101; Social &amp; Dating</button>
+            <button class="category-pill" aria-pressed="false" data-category="learning" onclick="setActiveCategory(this)">&#128218; Learning</button>
+            <button class="category-pill" aria-pressed="false" data-category="sports" onclick="setActiveCategory(this)">&#9917; Sports &amp; Outdoor</button>
+            <button class="category-pill" aria-pressed="false" data-category="faith" onclick="setActiveCategory(this)">&#128591; Faith &amp; Spirituality</button>
+            <button class="category-pill" aria-pressed="false" data-category="nightlife" onclick="setActiveCategory(this)">&#127881; Parties &amp; Nightlife</button>
+            <button class="category-pill" aria-pressed="false" data-category="wellness" onclick="setActiveCategory(this)">&#127973; Wellness</button>
+            <button class="category-pill" aria-pressed="false" data-category="other" onclick="setActiveCategory(this)">&#128204; Other</button>
           </div>
 
           <!-- Filter Bar -->
@@ -69,7 +73,7 @@
           </div>
 
           <!-- Activity List -->
-          <div id="activity-list" class="activity-list">
+          <div id="activity-list" class="activity-list" role="list" aria-live="polite" aria-atomic="false">
           </div>
         </div>
       </div>
